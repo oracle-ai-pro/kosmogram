@@ -1,45 +1,42 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>YouTube Lite</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <title>LMSH | Космограмм</title>
+    <style>
+        /* Минималистичный стиль Material UI */
+        body { font-family: 'Roboto', sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
+        .post-card { background: #1e293b; padding: 16px; border-radius: 12px; margin-bottom: 16px; }
+    </style>
 </head>
-<body class="theme-dark">
-  <div id="app" class="layout layout-pc">
-    <header class="topbar">
-      <div class="logo">YouTube Lite</div>
-      <div class="device-label" id="deviceLabel">PC Edition</div>
-      <button id="themeToggle" class="btn">🌙 Тёмная</button>
-    </header>
+<body>
 
-    <main class="main">
-      <section class="controls">
-        <input id="videoInput" class="input" type="text"
-               placeholder="Вставь ссылку на видео или ID…" />
-        <button id="playBtn" class="btn btn-primary">▶ Смотреть</button>
-      </section>
-
-      <section class="player-wrapper">
-        <div class="player-aspect">
-          <iframe id="playerFrame"
-                  src=""
-                  frameborder="0"
-                  allowfullscreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-          </iframe>
+    <div id="content">
+        <h1>Космограмм</h1>
+        <div id="feed">
+            <!-- Сюда будут подгружаться посты -->
         </div>
-      </section>
+    </div>
 
-      <section class="info">
-        <div id="modeInfo" class="info-box">
-          Режим: PC Edition · 480p Jacuzzi Mode
-        </div>
-      </section>
-    </main>
-  </div>
+    <script>
+        const RELEASE_DATE = new Date("2026-05-28T00:00:00");
 
-  <script src="app.js"></script>
+        // Проверка даты релиза
+        if (new Date() < RELEASE_DATE) {
+            window.location.href = "lock.html";
+        }
+
+        // Логика подписки (проверка localStorage)
+        const isSubscribed = localStorage.getItem("isSubscribed");
+        if (isSubscribed) {
+            console.log("Пользователь подписан на обновления.");
+        }
+
+        // Здесь будет функция загрузки постов из GitHub/API
+        async function loadFeed() {
+            // ... логика получения данных ...
+        }
+        loadFeed();
+    </script>
 </body>
 </html>
