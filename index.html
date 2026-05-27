@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LMSH | Космограмм</title>
     <style>
-        /* Минималистичный стиль Material UI */
         body { font-family: 'Roboto', sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
         .post-card { background: #1e293b; padding: 16px; border-radius: 12px; margin-bottom: 16px; }
     </style>
@@ -14,27 +14,21 @@
     <div id="content">
         <h1>Космограмм</h1>
         <div id="feed">
-            <!-- Сюда будут подгружаться посты -->
+            <div class="post-card">Тестовый пост: Система разблокирована!</div>
         </div>
     </div>
 
     <script>
         const RELEASE_DATE = new Date("2026-05-28T00:00:00");
 
-        // Проверка даты релиза
-        //if (new Date() < RELEASE_DATE) {
-          //  window.location.href = "lock.html";
-        }
-
-        // Логика подписки (проверка localStorage)
+        // Логика подписки
         const isSubscribed = localStorage.getItem("isSubscribed");
         if (isSubscribed) {
             console.log("Пользователь подписан на обновления.");
         }
 
-        // Здесь будет функция загрузки постов из GitHub/API
         async function loadFeed() {
-            // ... логика получения данных ...
+            console.log("Загрузка ленты...");
         }
         loadFeed();
     </script>
