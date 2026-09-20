@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kosmogram — LMSH Штаб</title>
 
-    <!-- Подключение Google Material Symbols -->
+    <!-- Подключение Google Material Symbols (Outlined & Filled) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <style>
@@ -38,6 +38,7 @@
             --border-color: #0f4028;
         }
 
+        /* Светлая тема: Яркий Всплеск (Белый) */
         body.theme-light {
             --bg-color: #eef2f6;
             --panel-bg: #ffffff;
@@ -50,6 +51,7 @@
             --msg-bg: #f1f5f9;
         }
 
+        /* Стиль для Material Symbols */
         .material-symbols-outlined,
         .material-symbols-filled {
             font-family: 'Material Symbols Outlined';
@@ -64,6 +66,7 @@
             white-space: nowrap;
             direction: ltr;
             -webkit-font-smoothing: antialiased;
+            font-feature-settings: 'liga';
         }
 
         .material-symbols-filled {
@@ -146,6 +149,11 @@
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .pinned-bar:hover {
+            background: rgba(0, 255, 204, 0.1);
         }
 
         .pinned-info {
@@ -180,6 +188,7 @@
             font-size: 0.75rem;
             color: var(--text-muted);
             text-align: center;
+            text-transform: capitalize;
         }
 
         /* Лента */
@@ -205,6 +214,7 @@
             border: 1px solid var(--border-color);
             font-size: var(--font-size);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .message.pinned-highlight {
@@ -220,50 +230,6 @@
             cursor: pointer;
         }
 
-        /* Карточка файла в чате */
-        .file-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(0, 0, 0, 0.15);
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
-            border-radius: 8px;
-            margin-top: 6px;
-            text-decoration: none;
-            color: var(--text-color);
-            transition: border-color 0.2s, background 0.2s;
-        }
-
-        .file-card:hover {
-            border-color: var(--accent-color);
-            background: rgba(0, 255, 204, 0.05);
-        }
-
-        .file-icon {
-            font-size: 32px !important;
-            color: var(--accent-color);
-        }
-
-        .file-info {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .file-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .file-size {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
         .timestamp {
             display: block;
             font-size: 0.68rem;
@@ -272,7 +238,7 @@
             margin-top: 6px;
         }
 
-        /* Панели */
+        /* Панели ввода */
         .user-panel {
             padding: 16px;
             background: rgba(0, 0, 0, 0.03);
@@ -294,6 +260,23 @@
             justify-content: center;
             gap: 8px;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notify-btn:hover {
+            background: var(--accent-color);
+            color: #fff;
+        }
+
+        .notify-btn.active {
+            background: rgba(255, 75, 75, 0.1);
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .notify-btn.active:hover {
+            background: var(--danger-color);
+            color: #fff;
         }
 
         .quick-actions {
@@ -314,6 +297,12 @@
             gap: 6px;
             cursor: pointer;
             user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .action-chip:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
         }
 
         .action-chip.liked {
@@ -331,39 +320,6 @@
             gap: 8px;
         }
 
-        /* Прогресс бар загрузки */
-        .upload-progress-container {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            background: var(--msg-bg);
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid var(--accent-color);
-        }
-
-        .upload-progress-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--accent-color);
-        }
-
-        .progress-bar-bg {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            width: 0%;
-            height: 100%;
-            background: var(--accent-color);
-            transition: width 0.2s ease;
-        }
-
         .input-wrapper {
             display: flex;
             align-items: flex-end;
@@ -372,6 +328,10 @@
             border-radius: 12px;
             padding: 8px 12px;
             gap: 8px;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent-color);
         }
 
         textarea {
@@ -395,6 +355,7 @@
             align-items: center;
             justify-content: center;
             padding: 4px;
+            transition: color 0.2s;
         }
 
         .icon-btn:hover {
@@ -412,11 +373,12 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .send-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
         }
 
         .preview-bar {
@@ -430,6 +392,25 @@
             color: var(--accent-color);
         }
 
+        .scroll-down-btn {
+            position: absolute;
+            bottom: 90px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--panel-bg);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s, transform 0.2s;
+            z-index: 10;
+        }
+
         /* Модальные окна */
         .modal {
             display: none;
@@ -441,6 +422,11 @@
             z-index: 1000;
         }
 
+        /* Модальное окно подтверждения — поверх всего просмотра (z-index: 3000) */
+        #confirm-modal {
+            z-index: 3000;
+        }
+
         .modal-content {
             background: var(--panel-bg);
             border: 1px solid var(--accent-color);
@@ -448,6 +434,43 @@
             padding: 20px;
             width: 90%;
             max-width: 450px;
+        }
+
+        .modal-content h3 {
+            color: var(--accent-color);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .setting-row select, .setting-row input[type="checkbox"] {
+            background: var(--msg-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
         }
 
         .btn-secondary {
@@ -459,12 +482,74 @@
             cursor: pointer;
         }
 
+        .btn-danger {
+            background: var(--danger-color);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Стиль для информации о канале */
+        .channel-info-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .channel-title-badge {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .channel-description {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-color);
+            background: var(--msg-bg);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .channel-link-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--msg-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .channel-link-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .bookmark-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Галерея / Библиотека Медиа */
         .media-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
             gap: 10px;
             max-height: 50vh;
             overflow-y: auto;
+            padding: 4px;
         }
 
         .media-item {
@@ -474,9 +559,15 @@
             border-radius: 8px;
             cursor: pointer;
             border: 1px solid var(--border-color);
+            transition: transform 0.2s, border-color 0.2s;
         }
 
-        /* Полноэкранный режим */
+        .media-item:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color);
+        }
+
+        /* Полноэкранный просмотрщик медиа (z-index: 2000) */
         .fullscreen-viewer {
             display: none;
             position: fixed;
@@ -495,6 +586,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .fullscreen-actions {
+            display: flex;
+            gap: 12px;
         }
 
         .fullscreen-content {
@@ -510,15 +607,19 @@
             max-width: 100%;
             max-height: 80vh;
             border-radius: 8px;
+            object-fit: contain;
         }
 
+        /* Контекстное меню ПКМ (z-index: 10000) */
         .context-menu {
             display: none;
             position: fixed;
             background: var(--msg-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             z-index: 10000;
+            overflow: hidden;
         }
 
         .context-menu-item {
@@ -528,6 +629,20 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .context-menu-item:hover {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .context-menu-item.danger {
+            color: var(--danger-color);
+        }
+
+        .context-menu-item.danger:hover {
+            background: rgba(255, 75, 75, 0.15);
         }
     </style>
 </head>
@@ -565,6 +680,11 @@
         <!-- Лента постов -->
         <div class="feed" id="feed"></div>
 
+        <!-- Кнопка скролла вниз -->
+        <button id="scroll-down-btn" class="scroll-down-btn" type="button">
+            <span class="material-symbols-outlined">arrow_downward</span>
+        </button>
+
         <!-- Панель Участников -->
         <div class="user-panel" id="user-panel">
             <button class="notify-btn" id="notify-toggle" type="button">
@@ -587,30 +707,22 @@
 
         <!-- Панель Админа -->
         <div class="admin-panel" id="admin-panel">
-            <!-- Индикатор прогресса загрузки большого файла -->
-            <div class="upload-progress-container" id="upload-progress-box">
-                <div class="upload-progress-header">
-                    <span id="upload-file-status">Загрузка файла на сервер...</span>
-                    <span id="upload-file-percent">0%</span>
-                </div>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="upload-progress-fill"></div>
-                </div>
-            </div>
-
             <div class="preview-bar" id="preview-bar">
                 <span id="attached-file-name">Файл прикреплен</span>
                 <span class="material-symbols-outlined icon-btn" style="font-size: 16px;" onclick="clearFile()">close</span>
             </div>
             
             <div class="input-wrapper">
-                <label class="icon-btn" title="Прикрепить файл (до 2 ГБ)">
+                <label class="icon-btn" title="Прикрепить файл">
                     <span class="material-symbols-outlined">attach_file</span>
-                    <!-- Принимает любые типы файлов до 2 ГБ -->
-                    <input type="file" id="file-input" style="display: none;">
+                    <input type="file" id="file-input" accept="image/*,video/*" style="display: none;">
                 </label>
 
                 <textarea id="post-input" rows="1" placeholder="Написать сообщение..."></textarea>
+
+                <button class="icon-btn" type="button" title="Предпросмотр" onclick="openPreviewModal()">
+                    <span class="material-symbols-outlined">visibility</span>
+                </button>
 
                 <button class="send-btn" id="send-btn" type="button" title="Отправить">
                     <span class="material-symbols-filled">send</span>
@@ -621,19 +733,101 @@
 
     <!-- Модальное окно "О канале" -->
     <div class="modal" id="channel-info-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3><span class="material-symbols-outlined">info</span> Информация о канале</h3>
+            <div class="modal-body channel-info-box">
+                <div class="channel-title-badge">Космо Олександр</div>
+                
+                <!-- Описание канала (Редактируется прямо в HTML) -->
+                <div class="channel-description">
+                    Официальный канал штаба LMSH. Главный инженер Ламирк, помощница Мурзик, вокал Снежинка и Хахми. Здесь публикуются самые свежие обновления, медиа и оперативные данные системы Kosmogram.
+                </div>
+
+                <div class="channel-link-wrapper">
+                    <span class="material-symbols-outlined" style="font-size: 18px; color: var(--text-muted);">link</span>
+                    <input type="text" class="channel-link-input" id="channel-url-input" readonly>
+                    <button class="icon-btn" id="copy-channel-link-btn" title="Скопировать ссылку">
+                        <span class="material-symbols-outlined">content_copy</span>
+                    </button>
+                </div>
+
+                <div class="bookmark-hint">
+                    <span class="material-symbols-outlined" style="font-size: 16px; color: var(--accent-color);">star</span>
+                    Чтобы не потерять канал, нажмите <b>Ctrl + D</b> (или Cmd + D) и добавьте его в закладки браузера.
+                </div>
+
+                <div style="font-weight: 600; font-size: 0.9rem; margin-top: 6px;">Медиафайлы канала:</div>
+                <div class="media-grid" id="modal-channel-media-grid"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeChannelInfoModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно Настроек -->
+    <div class="modal" id="settings-modal">
         <div class="modal-content">
-            <h3 style="color: var(--accent-color); margin-bottom: 12px;"><span class="material-symbols-outlined">info</span> О канале</h3>
-            <div style="font-weight: bold; font-size: 1.1rem; color: var(--accent-color); margin-bottom: 8px;">Космо Олександр</div>
-            <div style="font-size: 0.9rem; line-height: 1.4; margin-bottom: 12px;" contenteditable="true" id="editable-desc">
-                Официальный канал штаба LMSH. Публикация файлов, документов, медиа и инженерных разработок.
+            <h3><span class="material-symbols-outlined">palette</span> Персонализация</h3>
+            <div class="modal-body">
+                <div class="setting-row">
+                    <span>Тема оформления:</span>
+                    <select id="theme-select">
+                        <option value="default">Киберпанк (Неон)</option>
+                        <option value="oled">Абсолютно чёрный (OLED)</option>
+                        <option value="matrix">Матрица (Изумруд)</option>
+                        <option value="light">Яркий Всплеск (Белый)</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <span>Размер шрифта:</span>
+                    <select id="font-select">
+                        <option value="small">Мелкий</option>
+                        <option value="medium" selected>Средний</option>
+                        <option value="large">Крупный</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <span>Автоскролл при отправке:</span>
+                    <input type="checkbox" id="autoscroll-toggle" checked>
+                </div>
             </div>
-            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                <input type="text" id="channel-url-input" readonly style="flex: 1; background: var(--msg-bg); color: var(--accent-color); border: 1px solid var(--border-color); padding: 6px; border-radius: 6px;">
-                <button class="btn-secondary" id="copy-channel-link-btn">Копировать</button>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeSettingsModal()">Сохранить</button>
             </div>
-            <div class="media-grid" id="modal-channel-media-grid"></div>
-            <div style="margin-top: 12px; text-align: right;">
-                <button class="btn-secondary" onclick="document.getElementById('channel-info-modal').style.display='none'">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно Подтверждения Удаления -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content" style="max-width: 380px;">
+            <h3 style="color: var(--danger-color);"><span class="material-symbols-outlined">warning</span> Подтверждение</h3>
+            <p style="font-size: 0.95rem; line-height: 1.4; color: var(--text-color);">Вы действительно хотите удалить это сообщение? Отменить действие будет невозможно.</p>
+            <div class="modal-actions" style="margin-top: 16px;">
+                <button class="btn-secondary" onclick="closeConfirmModal()">Отмена</button>
+                <button class="btn-danger" id="confirm-delete-btn">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно Предпросмотра -->
+    <div class="modal" id="preview-modal">
+        <div class="modal-content">
+            <h3>Предварительный просмотр</h3>
+            <div class="modal-body" id="modal-preview-body" style="background: var(--msg-bg); padding: 12px; border-radius: 8px;"></div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closePreviewModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно Библиотеки Медиа -->
+    <div class="modal" id="gallery-modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <h3><span class="material-symbols-outlined">photo_library</span> Библиотека Медиа</h3>
+            <div class="media-grid" id="media-grid"></div>
+            <div class="modal-actions" style="margin-top: 16px;">
+                <button class="btn-secondary" onclick="closeGalleryModal()">Закрыть</button>
             </div>
         </div>
     </div>
@@ -641,11 +835,19 @@
     <!-- Полноэкранный просмотрщик медиа -->
     <div class="fullscreen-viewer" id="fullscreen-viewer">
         <div class="fullscreen-toolbar">
-            <button class="icon-btn" onclick="closeFullscreenViewer()">
+            <button class="icon-btn" onclick="closeFullscreenViewer()" title="Закрыть">
                 <span class="material-symbols-outlined" style="font-size: 28px;">close</span>
             </button>
-            <div>
-                <button class="btn-secondary" id="fs-download-btn">Скачать</button>
+            <div class="fullscreen-actions">
+                <button class="btn-secondary" id="fs-chat-btn" style="display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">chat</span> Перейти в чат
+                </button>
+                <button class="btn-secondary" id="fs-download-btn" style="display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">download</span> Сохранить
+                </button>
+                <button class="btn-danger" id="fs-delete-btn" style="display:none; align-items:center; gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">delete</span> Удалить
+                </button>
             </div>
         </div>
         <div class="fullscreen-content" id="fullscreen-content"></div>
@@ -654,18 +856,19 @@
     <!-- Контекстное меню ПКМ -->
     <div class="context-menu" id="context-menu">
         <div class="context-menu-item" id="pin-post-btn">
-            <span class="material-symbols-outlined">push_pin</span> <span id="pin-text-label">Закрепить</span>
+            <span class="material-symbols-outlined" id="pin-icon">push_pin</span>
+            <span id="pin-text-label">Закрепить пост</span>
         </div>
-        <div class="context-menu-item" id="delete-post-btn" style="color: var(--danger-color);">
-            <span class="material-symbols-outlined">delete</span> Удалить
+        <div class="context-menu-item danger" id="delete-post-btn">
+            <span class="material-symbols-outlined">delete</span>
+            Удалить сообщение
         </div>
     </div>
 
-    <!-- Firebase SDK (Firestore & Storage v12) -->
+    <!-- Firebase SDK & Логика -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
         import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAoWmI19fI6EIzsZPQPQl970evxdMU3cG4",
@@ -678,30 +881,12 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         let selectedDocData = null; 
         let pinnedPostsList = [];
         let currentPinnedIndex = 0;
         let allPostsList = [];
-        let isUploading = false;
-
-        // Форматирование размера файлов
-        const formatFileSize = (bytes) => {
-            if (bytes === 0) return '0 Б';
-            const k = 1024;
-            const sizes = ['Б', 'КБ', 'МБ', 'ГБ'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        };
-
-        // Защита от случайного закрытия вкладки во время загрузки
-        window.addEventListener('beforeunload', (e) => {
-            if (isUploading) {
-                e.preventDefault();
-                e.returnValue = 'Файл еще загружается! Вы уверены, что хотите выйти?';
-            }
-        });
+        let activeFullscreenPost = null;
 
         // Проверка прав Админа
         const isAdmin = localStorage.getItem("is_admin") === "true";
@@ -711,47 +896,199 @@
         }
 
         window.activateAdmin = () => {
-            if (!isAdmin && prompt("Шифр доступа:") === "LMSH2026") {
-                localStorage.setItem("is_admin", "true");
-                location.reload();
+            if (!isAdmin) {
+                if (prompt("Шифр доступа к инженерной панели:") === "LMSH2026") {
+                    localStorage.setItem("is_admin", "true");
+                    location.reload();
+                }
             }
         };
 
-        // Быстрые кнопки
+        // Персонализация
+        const themeSelect = document.getElementById("theme-select");
+        const fontSelect = document.getElementById("font-select");
+        
+        const applySettings = () => {
+            const savedTheme = localStorage.getItem("kosmo_theme") || "default";
+            const savedFont = localStorage.getItem("kosmo_font") || "medium";
+
+            document.body.className = savedTheme !== "default" ? `theme-${savedTheme}` : "";
+            themeSelect.value = savedTheme;
+
+            if (savedFont === "small") document.documentElement.style.setProperty('--font-size', '0.85rem');
+            else if (savedFont === "large") document.documentElement.style.setProperty('--font-size', '1.05rem');
+            else document.documentElement.style.setProperty('--font-size', '0.95rem');
+            fontSelect.value = savedFont;
+        };
+
+        themeSelect.addEventListener("change", (e) => {
+            localStorage.setItem("kosmo_theme", e.target.value);
+            applySettings();
+        });
+
+        fontSelect.addEventListener("change", (e) => {
+            localStorage.setItem("kosmo_font", e.target.value);
+            applySettings();
+        });
+
+        document.getElementById("open-settings-btn").addEventListener("click", () => {
+            document.getElementById("settings-modal").style.display = "flex";
+        });
+
+        window.closeSettingsModal = () => {
+            document.getElementById("settings-modal").style.display = "none";
+        };
+
+        applySettings();
+
+        // -------------------------------------------------------------
+        // Логика быстрой панели быстрой связи (Лайк, Поделиться, О канале)
+        // -------------------------------------------------------------
         const likeBtn = document.getElementById("channel-like-btn");
+        const likeCountElem = document.getElementById("like-count");
+        const likeIcon = document.getElementById("like-icon");
+
         let currentLikes = parseInt(localStorage.getItem("kosmo_channel_likes")) || 24;
         let isLiked = localStorage.getItem("kosmo_user_liked") === "true";
 
         const updateLikeUI = () => {
-            document.getElementById("like-count").innerText = currentLikes;
-            likeBtn.classList.toggle("liked", isLiked);
+            likeCountElem.innerText = currentLikes;
+            if (isLiked) {
+                likeBtn.classList.add("liked");
+                likeIcon.classList.remove("material-symbols-outlined");
+                likeIcon.classList.add("material-symbols-filled");
+            } else {
+                likeBtn.classList.remove("liked");
+                likeIcon.classList.remove("material-symbols-filled");
+                likeIcon.classList.add("material-symbols-outlined");
+            }
         };
+
         likeBtn.addEventListener("click", () => {
-            currentLikes += isLiked ? -1 : 1;
-            isLiked = !isLiked;
+            if (isLiked) {
+                currentLikes--;
+                isLiked = false;
+            } else {
+                currentLikes++;
+                isLiked = true;
+            }
             localStorage.setItem("kosmo_channel_likes", currentLikes);
             localStorage.setItem("kosmo_user_liked", isLiked);
             updateLikeUI();
         });
+
         updateLikeUI();
 
-        document.getElementById("channel-share-btn").addEventListener("click", () => {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Ссылка скопирована!");
+        // Кнопка: Поделиться ссылкой
+        const shareBtn = document.getElementById("channel-share-btn");
+        shareBtn.addEventListener("click", () => {
+            const channelUrl = window.location.href;
+            navigator.clipboard.writeText(channelUrl).then(() => {
+                alert("Ссылка на канал скопирована в буфер обмена!");
+            }).catch(() => {
+                prompt("Скопируйте ссылку вручную:", channelUrl);
+            });
         });
 
-        document.getElementById("channel-info-btn").addEventListener("click", () => {
-            document.getElementById("channel-url-input").value = window.location.href;
+        // Кнопка: О канале
+        const infoBtn = document.getElementById("channel-info-btn");
+        const channelUrlInput = document.getElementById("channel-url-input");
+        const copyChannelLinkBtn = document.getElementById("copy-channel-link-btn");
+
+        infoBtn.addEventListener("click", () => {
+            channelUrlInput.value = window.location.href;
+            renderChannelMediaGrid();
             document.getElementById("channel-info-modal").style.display = "flex";
+        });
+
+        window.closeChannelInfoModal = () => {
+            document.getElementById("channel-info-modal").style.display = "none";
+        };
+
+        copyChannelLinkBtn.addEventListener("click", () => {
+            navigator.clipboard.writeText(channelUrlInput.value).then(() => {
+                alert("Ссылка на канал скопирована!");
+            });
+        });
+
+        const renderChannelMediaGrid = () => {
+            const grid = document.getElementById("modal-channel-media-grid");
+            grid.innerHTML = "";
+            const mediaPosts = allPostsList.filter(p => p.mediaUrl);
+
+            if (mediaPosts.length === 0) {
+                grid.innerHTML = "<div style='color: var(--text-muted); grid-column: 1/-1; font-size:0.85rem;'>Медиафайлы пока отсутствуют</div>";
+            } else {
+                mediaPosts.forEach(p => {
+                    let elem;
+                    if (p.mediaType === "video") {
+                        elem = document.createElement("video");
+                        elem.src = p.mediaUrl;
+                    } else {
+                        elem = document.createElement("img");
+                        elem.src = p.mediaUrl;
+                    }
+                    elem.className = "media-item";
+                    elem.onclick = () => {
+                        closeChannelInfoModal();
+                        openFullscreenViewer(p.id);
+                    };
+                    grid.appendChild(elem);
+                });
+            }
+        };
+
+        // Динамический интерфейс Уведомлений
+        const notifyBtn = document.getElementById("notify-toggle");
+        const notifyIcon = document.getElementById("notify-icon");
+        const notifyLabel = document.getElementById("notify-label");
+
+        const updateNotificationUI = () => {
+            if ("Notification" in window && Notification.permission === "granted") {
+                notifyBtn.classList.add("active");
+                notifyIcon.innerText = "notifications_off";
+                notifyLabel.innerText = "Отключить уведомления";
+            } else {
+                notifyBtn.classList.remove("active");
+                notifyIcon.innerText = "notifications";
+                notifyLabel.innerText = "Включить уведомления";
+            }
+        };
+
+        notifyBtn.addEventListener("click", () => {
+            if ("Notification" in window) {
+                if (Notification.permission === "granted") {
+                    alert("Уведомления уже активированы. Вы можете отключить их в настройках сайта в браузере.");
+                } else {
+                    Notification.requestPermission().then(permission => {
+                        updateNotificationUI();
+                        if (permission === "granted") {
+                            alert("Уведомления успешно включены!");
+                        }
+                    });
+                }
+            } else {
+                alert("Ваш браузер не поддерживает уведомления.");
+            }
+        });
+
+        updateNotificationUI();
+
+        // Base64 Конвертер
+        const fileToBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (err) => reject(err);
         });
 
         const fileInput = document.getElementById("file-input");
         const previewBar = document.getElementById("preview-bar");
+        const fileNameLabel = document.getElementById("attached-file-name");
 
         fileInput.addEventListener("change", function() {
             if (this.files.length > 0) {
-                const file = this.files[0];
-                document.getElementById("attached-file-name").innerText = `${file.name} (${formatFileSize(file.size)})`;
+                fileNameLabel.innerText = "Файл: " + this.files[0].name;
                 previewBar.style.display = "flex";
             }
         });
@@ -761,12 +1098,18 @@
             previewBar.style.display = "none";
         };
 
-        // Чтение ленты
+        // Загрузка Ленты
         const feed = document.getElementById("feed");
+        const pinnedBar = document.getElementById("pinned-bar");
+        const pinnedText = document.getElementById("pinned-text");
+        const pinnedCount = document.getElementById("pinned-count");
+
         onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "asc")), (snapshot) => {
             feed.innerHTML = "";
             pinnedPostsList = [];
             allPostsList = [];
+
+            let lastDateStr = null;
 
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
@@ -774,48 +1117,58 @@
                 const post = { id, ...data };
                 allPostsList.push(post);
 
-                if (data.isPinned) pinnedPostsList.push(post);
+                if (data.isPinned) {
+                    pinnedPostsList.push(post);
+                }
 
+                // Дата сообщения
+                let dateObj = data.timestamp ? data.timestamp.toDate() : new Date();
+                let dateStr = dateObj.toLocaleDateString("ru-RU", { day: 'numeric', month: 'long', year: 'numeric' });
+
+                // Разделитель дат
+                if (dateStr !== lastDateStr) {
+                    const dateDiv = document.createElement("div");
+                    dateDiv.className = "date-separator";
+                    dateDiv.innerText = dateStr;
+                    feed.appendChild(dateDiv);
+                    lastDateStr = dateStr;
+                }
+
+                // Элемент сообщения
                 const div = document.createElement("div");
                 div.className = "message";
                 div.id = `msg-${id}`;
-
+                div.dataset.id = id;
+                
                 let html = "";
-                if (data.text) html += `<div>${data.text.replace(/\n/g, '<br>')}</div>`;
-
-                // Отображение медиа или документа
-                if (data.fileUrl) {
-                    if (data.fileType && data.fileType.startsWith("image/")) {
-                        html += `<img src="${data.fileUrl}" onclick="openFullscreen('${data.fileUrl}')">`;
-                    } else if (data.fileType && data.fileType.startsWith("video/")) {
-                        html += `<video src="${data.fileUrl}" controls></video>`;
+                if (data.text) {
+                    html += `<div>${data.text.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (data.mediaUrl) {
+                    if (data.mediaType === "video") {
+                        html += `<video src="${data.mediaUrl}" controls onclick="openFullscreenViewer('${id}')"></video>`;
                     } else {
-                        // Карточка обычного файла (json, zip, pdf и др.)
-                        html += `
-                            <a href="${data.fileUrl}" target="_blank" download="${data.fileName || 'file'}" class="file-card">
-                                <span class="material-symbols-outlined file-icon">description</span>
-                                <div class="file-info">
-                                    <span class="file-name">${data.fileName || 'Документ'}</span>
-                                    <span class="file-size">${formatFileSize(data.fileSize || 0)}</span>
-                                </div>
-                            </a>
-                        `;
+                        html += `<img src="${data.mediaUrl}" alt="Attachment" onclick="openFullscreenViewer('${id}')">`;
                     }
                 }
-
                 if (data.timestamp) {
-                    const time = data.timestamp.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const time = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     html += `<span class="timestamp">${time}</span>`;
                 }
 
                 div.innerHTML = html;
 
+                // ПКМ Контекстное меню
                 if (isAdmin) {
                     div.addEventListener("contextmenu", (e) => {
                         e.preventDefault();
                         selectedDocData = { id, isPinned: !!data.isPinned };
+                        
                         const menu = document.getElementById("context-menu");
-                        document.getElementById("pin-text-label").innerText = data.isPinned ? "Открепить" : "Закрепить";
+                        const pinLabel = document.getElementById("pin-text-label");
+                        
+                        pinLabel.innerText = data.isPinned ? "Открепить пост" : "Закрепить пост";
+
                         menu.style.top = `${e.clientY}px`;
                         menu.style.left = `${e.clientX}px`;
                         menu.style.display = "block";
@@ -825,107 +1178,258 @@
                 feed.appendChild(div);
             });
 
-            feed.scrollTop = feed.scrollHeight;
+            // Закрепленные посты
+            if (pinnedPostsList.length > 0) {
+                pinnedBar.style.display = "flex";
+                if (currentPinnedIndex >= pinnedPostsList.length) currentPinnedIndex = 0;
+                
+                const activePin = pinnedPostsList[currentPinnedIndex];
+                pinnedText.innerText = activePin.text || "Прикреплённый файл";
+                
+                pinnedCount.innerText = pinnedPostsList.length > 1 
+                    ? `Закрепленное сообщение (${currentPinnedIndex + 1}/${pinnedPostsList.length})`
+                    : "Закрепленное сообщение";
+            } else {
+                pinnedBar.style.display = "none";
+            }
+
+            if (document.getElementById("autoscroll-toggle").checked) {
+                feed.scrollTop = feed.scrollHeight;
+            }
         });
 
-        // Отправка сообщений и загрузка файлов с Прогресс-баром
-        const sendBtn = document.getElementById("send-btn");
-        const progressBox = document.getElementById("upload-progress-box");
-        const progressFill = document.getElementById("upload-progress-fill");
-        const progressPercent = document.getElementById("upload-file-percent");
-        const progressStatus = document.getElementById("upload-file-status");
+        // Скролл по закрепам
+        pinnedBar.addEventListener("click", () => {
+            if (pinnedPostsList.length === 0) return;
 
-        sendBtn.addEventListener("click", async () => {
-            const textInput = document.getElementById("post-input");
-            const text = textInput.value.trim();
+            const targetPin = pinnedPostsList[currentPinnedIndex];
+            scrollToMessage(targetPin.id);
+
+            currentPinnedIndex = (currentPinnedIndex + 1) % pinnedPostsList.length;
+        });
+
+        const scrollToMessage = (msgId) => {
+            const targetElem = document.getElementById(`msg-${msgId}`);
+            if (targetElem) {
+                targetElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetElem.classList.add("pinned-highlight");
+                setTimeout(() => targetElem.classList.remove("pinned-highlight"), 2000);
+            }
+        };
+
+        document.addEventListener("click", () => {
+            document.getElementById("context-menu").style.display = "none";
+        });
+
+        // Закрепить / Открепить
+        document.getElementById("pin-post-btn").addEventListener("click", async () => {
+            if (selectedDocData) {
+                try {
+                    await updateDoc(doc(db, "posts", selectedDocData.id), {
+                        isPinned: !selectedDocData.isPinned
+                    });
+                } catch (e) {
+                    alert("Ошибка при изменении закрепления!");
+                }
+            }
+        });
+
+        // Удаление
+        document.getElementById("delete-post-btn").addEventListener("click", () => {
+            if (selectedDocData) {
+                document.getElementById("confirm-modal").style.display = "flex";
+            }
+        });
+
+        window.closeConfirmModal = () => {
+            document.getElementById("confirm-modal").style.display = "none";
+        };
+
+        document.getElementById("confirm-delete-btn").addEventListener("click", async () => {
+            if (selectedDocData) {
+                try {
+                    await deleteDoc(doc(db, "posts", selectedDocData.id));
+                    closeConfirmModal();
+                    closeFullscreenViewer();
+                } catch (e) {
+                    alert("Ошибка при удалении сообщения!");
+                }
+            }
+        });
+
+        // Отправка сообщения
+        document.getElementById("send-btn").addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            const input = document.getElementById("post-input");
+            const text = input.value.trim();
             const file = fileInput.files[0];
 
             if (!text && !file) return;
 
-            sendBtn.disabled = true;
-
             try {
-                let fileUrl = null;
-                let fileName = null;
-                let fileSize = null;
-                let fileType = null;
+                let mediaUrl = null;
+                let mediaType = null;
 
                 if (file) {
-                    isUploading = true;
-                    progressBox.style.display = "flex";
-
-                    // Создаем ссылку хранения в Storage
-                    const storageRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
-                    const uploadTask = uploadBytesResumable(storageRef, file);
-
-                    await new Promise((resolve, reject) => {
-                        uploadTask.on('state_changed', 
-                            (snapshot) => {
-                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                                progressFill.style.width = `${progress.toFixed(0)}%`;
-                                progressPercent.innerText = `${progress.toFixed(0)}%`;
-                                progressStatus.innerText = `Загрузка: ${formatFileSize(snapshot.bytesTransferred)} из ${formatFileSize(snapshot.totalBytes)}`;
-                            }, 
-                            (error) => {
-                                alert("Ошибка при загрузке файла: " + error.message);
-                                reject(error);
-                            }, 
-                            async () => {
-                                fileUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                                fileName = file.name;
-                                fileSize = file.size;
-                                fileType = file.type;
-                                resolve();
-                            }
-                        );
-                    });
+                    mediaUrl = await fileToBase64(file);
+                    mediaType = file.type.startsWith("video/") ? "video" : "image";
                 }
 
-                // Запись в Firestore
                 await addDoc(collection(db, "posts"), {
                     text: text,
-                    fileUrl: fileUrl,
-                    fileName: fileName,
-                    fileSize: fileSize,
-                    fileType: fileType,
+                    mediaUrl: mediaUrl,
+                    mediaType: mediaType,
                     isPinned: false,
                     timestamp: serverTimestamp()
                 });
 
-                textInput.value = "";
+                input.value = "";
                 clearFile();
             } catch (err) {
-                console.error("Ошибка:", err);
-            } finally {
-                isUploading = false;
-                sendBtn.disabled = false;
-                progressBox.style.display = "none";
-                progressFill.style.width = "0%";
+                console.error("Ошибка публикации:", err);
             }
         });
 
-        document.addEventListener("click", () => document.getElementById("context-menu").style.display = "none");
+        // Библиотека Медиа
+        document.getElementById("open-gallery-btn").addEventListener("click", () => {
+            const grid = document.getElementById("media-grid");
+            grid.innerHTML = "";
 
-        document.getElementById("delete-post-btn").addEventListener("click", async () => {
-            if (selectedDocData && confirm("Удалить сообщение?")) {
-                await deleteDoc(doc(db, "posts", selectedDocData.id));
+            const mediaPosts = allPostsList.filter(p => p.mediaUrl);
+
+            if (mediaPosts.length === 0) {
+                grid.innerHTML = "<div style='color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 20px;'>Медиафайлы отсутствуют</div>";
+            } else {
+                mediaPosts.forEach(p => {
+                    let elem;
+                    if (p.mediaType === "video") {
+                        elem = document.createElement("video");
+                        elem.src = p.mediaUrl;
+                    } else {
+                        elem = document.createElement("img");
+                        elem.src = p.mediaUrl;
+                    }
+                    elem.className = "media-item";
+                    elem.onclick = () => {
+                        closeGalleryModal();
+                        openFullscreenViewer(p.id);
+                    };
+                    grid.appendChild(elem);
+                });
             }
+
+            document.getElementById("gallery-modal").style.display = "flex";
         });
 
-        document.getElementById("pin-post-btn").addEventListener("click", async () => {
-            if (selectedDocData) {
-                await updateDoc(doc(db, "posts", selectedDocData.id), { isPinned: !selectedDocData.isPinned });
-            }
-        });
+        window.closeGalleryModal = () => {
+            document.getElementById("gallery-modal").style.display = "none";
+        };
 
-        window.openFullscreen = (url) => {
-            document.getElementById("fullscreen-content").innerHTML = `<img src="${url}">`;
+        // Полноэкранный просмотрщик медиа
+        window.openFullscreenViewer = (postId) => {
+            const post = allPostsList.find(p => p.id === postId);
+            if (!post || !post.mediaUrl) return;
+
+            activeFullscreenPost = post;
+            const content = document.getElementById("fullscreen-content");
+            content.innerHTML = "";
+
+            if (post.mediaType === "video") {
+                content.innerHTML = `<video src="${post.mediaUrl}" controls autoplay></video>`;
+            } else {
+                content.innerHTML = `<img src="${post.mediaUrl}">`;
+            }
+
+            // Кнопка удаления для админа
+            const deleteBtn = document.getElementById("fs-delete-btn");
+            if (isAdmin) {
+                deleteBtn.style.display = "flex";
+            } else {
+                deleteBtn.style.display = "none";
+            }
+
             document.getElementById("fullscreen-viewer").style.display = "flex";
         };
 
         window.closeFullscreenViewer = () => {
             document.getElementById("fullscreen-viewer").style.display = "none";
+            document.getElementById("fullscreen-content").innerHTML = "";
+            activeFullscreenPost = null;
         };
+
+        // Кнопка: Перейти в чат
+        document.getElementById("fs-chat-btn").addEventListener("click", () => {
+            if (activeFullscreenPost) {
+                const id = activeFullscreenPost.id;
+                closeFullscreenViewer();
+                scrollToMessage(id);
+            }
+        });
+
+        // Кнопка: Скачать
+        document.getElementById("fs-download-btn").addEventListener("click", () => {
+            if (activeFullscreenPost) {
+                const a = document.createElement("a");
+                a.href = activeFullscreenPost.mediaUrl;
+                a.download = `kosmo_media_${Date.now()}.${activeFullscreenPost.mediaType === "video" ? "mp4" : "png"}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        });
+
+        // Кнопка: Удалить (в полноэкранном режиме)
+        document.getElementById("fs-delete-btn").addEventListener("click", () => {
+            if (activeFullscreenPost) {
+                selectedDocData = { id: activeFullscreenPost.id };
+                document.getElementById("confirm-modal").style.display = "flex";
+            }
+        });
+
+        // Предпросмотр
+        window.openPreviewModal = async () => {
+            const text = document.getElementById("post-input").value.trim();
+            const file = fileInput.files[0];
+            const modalBody = document.getElementById("modal-preview-body");
+
+            if (!text && !file) {
+                alert("Поле пустое!");
+                return;
+            }
+
+            let html = "";
+            if (text) html += `<div>${text.replace(/\n/g, '<br>')}</div>`;
+            if (file) {
+                const src = await fileToBase64(file);
+                if (file.type.startsWith("video/")) {
+                    html += `<video src="${src}" controls style="max-width:100%; border-radius:8px; margin-top:8px;"></video>`;
+                } else {
+                    html += `<img src="${src}" style="max-width:100%; border-radius:8px; margin-top:8px;">`;
+                }
+            }
+
+            modalBody.innerHTML = html;
+            document.getElementById("preview-modal").style.display = "flex";
+        };
+
+        window.closePreviewModal = () => {
+            document.getElementById("preview-modal").style.display = "none";
+        };
+
+        // Скролл вниз
+        const scrollBtn = document.getElementById("scroll-down-btn");
+        feed.addEventListener("scroll", () => {
+            if (feed.scrollHeight - feed.scrollTop - feed.clientHeight > 150) {
+                scrollBtn.style.display = "flex";
+            } else {
+                scrollBtn.style.display = "none";
+            }
+        });
+
+        scrollBtn.addEventListener("click", () => {
+            feed.scrollTo({ top: feed.scrollHeight, behavior: "smooth" });
+        });
     </script>
 </body>
 </html>
