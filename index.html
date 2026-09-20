@@ -3,34 +3,929 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMSH | Космограмм</title>
+    <title>Kosmogram — LMSH Штаб</title>
+
+    <!-- Подключение Google Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
     <style>
-        body { font-family: 'Roboto', sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
-        .post-card { background: #1e293b; padding: 16px; border-radius: 12px; margin-bottom: 16px; }
+        :root {
+            --bg-color: #0b0d17;
+            --panel-bg: #131728;
+            --accent-color: #00ffcc;
+            --accent-hover: #00ccb3;
+            --text-color: #e2e8f0;
+            --text-muted: #64748b;
+            --danger-color: #ff4b4b;
+            --border-color: #1f293d;
+            --msg-bg: #1a2035;
+            --font-size: 0.95rem;
+        }
+
+        body.theme-oled {
+            --bg-color: #000000;
+            --panel-bg: #0a0a0a;
+            --msg-bg: #121212;
+            --border-color: #222222;
+        }
+
+        body.theme-matrix {
+            --bg-color: #020d08;
+            --panel-bg: #051a10;
+            --accent-color: #00ff66;
+            --accent-hover: #00cc52;
+            --msg-bg: #0a291a;
+            --border-color: #0f4028;
+        }
+
+        body.theme-light {
+            --bg-color: #eef2f6;
+            --panel-bg: #ffffff;
+            --accent-color: #0088ff;
+            --accent-hover: #0066cc;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --danger-color: #ef4444;
+            --border-color: #cbd5e1;
+            --msg-bg: #f1f5f9;
+        }
+
+        .material-symbols-outlined,
+        .material-symbols-filled {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .material-symbols-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 650px;
+            height: 100vh;
+            background-color: var(--panel-bg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Шапка */
+        .chat-header {
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header h2 {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-badge {
+            font-size: 0.75rem;
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--accent-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--accent-color);
+            cursor: pointer;
+        }
+
+        /* Закрепленное сообщение */
+        .pinned-bar {
+            background: rgba(0, 255, 204, 0.05);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 16px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .pinned-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .pinned-text {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pinned-count {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Разделитель даты */
+        .date-separator {
+            align-self: center;
+            margin: 12px 0 4px 0;
+            padding: 4px 12px;
+            background: rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Лента */
+        .feed {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            background: var(--msg-bg);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-bottom-left-radius: 2px;
+            max-width: 85%;
+            align-self: flex-start;
+            word-wrap: break-word;
+            position: relative;
+            border: 1px solid var(--border-color);
+            font-size: var(--font-size);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .message.pinned-highlight {
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 12px rgba(0, 255, 204, 0.4);
+        }
+
+        .message img, .message video {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Карточка файла в чате */
+        .file-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-top: 6px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .file-card:hover {
+            border-color: var(--accent-color);
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .file-icon {
+            font-size: 32px !important;
+            color: var(--accent-color);
+        }
+
+        .file-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .timestamp {
+            display: block;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 6px;
+        }
+
+        /* Панели */
+        .user-panel {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.03);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notify-btn {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .quick-actions {
+            display: flex;
+            justify-content: space-around;
+            gap: 8px;
+        }
+
+        .action-chip {
+            background: var(--msg-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .action-chip.liked {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+            background: rgba(255, 75, 75, 0.1);
+        }
+
+        .admin-panel {
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.03);
+            border-top: 1px solid var(--border-color);
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Прогресс бар загрузки */
+        .upload-progress-container {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: var(--msg-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .upload-progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--accent-color);
+            transition: width 0.2s ease;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            background: var(--msg-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px 12px;
+            gap: 8px;
+        }
+
+        textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: var(--font-size);
+            resize: none;
+            max-height: 120px;
+            outline: none;
+            line-height: 1.4;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+        }
+
+        .icon-btn:hover {
+            color: var(--accent-color);
+        }
+
+        .send-btn {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .preview-bar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 255, 204, 0.08);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--panel-bg);
+            border: 1px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 450px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .media-item {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Полноэкранный режим */
+        .fullscreen-viewer {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fullscreen-toolbar {
+            width: 100%;
+            padding: 16px 24px;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fullscreen-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 95%;
+            max-height: 80vh;
+        }
+
+        .fullscreen-content img, .fullscreen-content video {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 8px;
+        }
+
+        .context-menu {
+            display: none;
+            position: fixed;
+            background: var(--msg-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            z-index: 10000;
+        }
+
+        .context-menu-item {
+            padding: 10px 16px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div id="content">
-        <h1>Космограмм</h1>
-        <div id="feed">
-            <div class="post-card">Тестовый пост: Система разблокирована!</div>
+    <div class="chat-container">
+        <!-- Шапка -->
+        <div class="chat-header">
+            <div class="header-title">
+                <span class="material-symbols-filled" style="color: var(--accent-color);">terminal</span>
+                <h2>Kosmogram</h2>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="open-gallery-btn" title="Библиотека Медиа">
+                    <span class="material-symbols-outlined">photo_library</span>
+                </button>
+                <button class="icon-btn" id="open-settings-btn" title="Настройки">
+                    <span class="material-symbols-outlined">settings</span>
+                </button>
+                <span class="admin-badge" onclick="activateAdmin()">Штаб LMSH</span>
+            </div>
+        </div>
+
+        <!-- Закрепленное сообщение -->
+        <div class="pinned-bar" id="pinned-bar">
+            <div class="pinned-info">
+                <span class="material-symbols-filled" style="color: var(--accent-color); font-size: 18px;">push_pin</span>
+                <div>
+                    <span class="pinned-count" id="pinned-count">Закрепленное сообщение</span>
+                    <div class="pinned-text" id="pinned-text">Загрузка...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Лента постов -->
+        <div class="feed" id="feed"></div>
+
+        <!-- Панель Участников -->
+        <div class="user-panel" id="user-panel">
+            <button class="notify-btn" id="notify-toggle" type="button">
+                <span class="material-symbols-outlined" id="notify-icon">notifications</span>
+                <span id="notify-label">Включить уведомления</span>
+            </button>
+            <div class="quick-actions">
+                <div class="action-chip" id="channel-like-btn">
+                    <span class="material-symbols-outlined" id="like-icon">favorite</span> 
+                    <span id="like-count">24</span>
+                </div>
+                <div class="action-chip" id="channel-share-btn">
+                    <span class="material-symbols-outlined">share</span> Поделиться
+                </div>
+                <div class="action-chip" id="channel-info-btn">
+                    <span class="material-symbols-outlined">info</span> О канале
+                </div>
+            </div>
+        </div>
+
+        <!-- Панель Админа -->
+        <div class="admin-panel" id="admin-panel">
+            <!-- Индикатор прогресса загрузки большого файла -->
+            <div class="upload-progress-container" id="upload-progress-box">
+                <div class="upload-progress-header">
+                    <span id="upload-file-status">Загрузка файла на сервер...</span>
+                    <span id="upload-file-percent">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="upload-progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="preview-bar" id="preview-bar">
+                <span id="attached-file-name">Файл прикреплен</span>
+                <span class="material-symbols-outlined icon-btn" style="font-size: 16px;" onclick="clearFile()">close</span>
+            </div>
+            
+            <div class="input-wrapper">
+                <label class="icon-btn" title="Прикрепить файл (до 2 ГБ)">
+                    <span class="material-symbols-outlined">attach_file</span>
+                    <!-- Принимает любые типы файлов до 2 ГБ -->
+                    <input type="file" id="file-input" style="display: none;">
+                </label>
+
+                <textarea id="post-input" rows="1" placeholder="Написать сообщение..."></textarea>
+
+                <button class="send-btn" id="send-btn" type="button" title="Отправить">
+                    <span class="material-symbols-filled">send</span>
+                </button>
+            </div>
         </div>
     </div>
 
-    <script>
-        const RELEASE_DATE = new Date("2026-05-28T00:00:00");
+    <!-- Модальное окно "О канале" -->
+    <div class="modal" id="channel-info-modal">
+        <div class="modal-content">
+            <h3 style="color: var(--accent-color); margin-bottom: 12px;"><span class="material-symbols-outlined">info</span> О канале</h3>
+            <div style="font-weight: bold; font-size: 1.1rem; color: var(--accent-color); margin-bottom: 8px;">Космо Олександр</div>
+            <div style="font-size: 0.9rem; line-height: 1.4; margin-bottom: 12px;" contenteditable="true" id="editable-desc">
+                Официальный канал штаба LMSH. Публикация файлов, документов, медиа и инженерных разработок.
+            </div>
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <input type="text" id="channel-url-input" readonly style="flex: 1; background: var(--msg-bg); color: var(--accent-color); border: 1px solid var(--border-color); padding: 6px; border-radius: 6px;">
+                <button class="btn-secondary" id="copy-channel-link-btn">Копировать</button>
+            </div>
+            <div class="media-grid" id="modal-channel-media-grid"></div>
+            <div style="margin-top: 12px; text-align: right;">
+                <button class="btn-secondary" onclick="document.getElementById('channel-info-modal').style.display='none'">Закрыть</button>
+            </div>
+        </div>
+    </div>
 
-        // Логика подписки
-        const isSubscribed = localStorage.getItem("isSubscribed");
-        if (isSubscribed) {
-            console.log("Пользователь подписан на обновления.");
+    <!-- Полноэкранный просмотрщик медиа -->
+    <div class="fullscreen-viewer" id="fullscreen-viewer">
+        <div class="fullscreen-toolbar">
+            <button class="icon-btn" onclick="closeFullscreenViewer()">
+                <span class="material-symbols-outlined" style="font-size: 28px;">close</span>
+            </button>
+            <div>
+                <button class="btn-secondary" id="fs-download-btn">Скачать</button>
+            </div>
+        </div>
+        <div class="fullscreen-content" id="fullscreen-content"></div>
+    </div>
+
+    <!-- Контекстное меню ПКМ -->
+    <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" id="pin-post-btn">
+            <span class="material-symbols-outlined">push_pin</span> <span id="pin-text-label">Закрепить</span>
+        </div>
+        <div class="context-menu-item" id="delete-post-btn" style="color: var(--danger-color);">
+            <span class="material-symbols-outlined">delete</span> Удалить
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Firestore & Storage v12) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAoWmI19fI6EIzsZPQPQl970evxdMU3cG4",
+            authDomain: "kosmogram-f6788.firebaseapp.com",
+            projectId: "kosmogram-f6788",
+            storageBucket: "kosmogram-f6788.firebasestorage.app",
+            messagingSenderId: "301556845215",
+            appId: "1:301556845215:web:4ffc9382ea0543ae8cf0aa"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        let selectedDocData = null; 
+        let pinnedPostsList = [];
+        let currentPinnedIndex = 0;
+        let allPostsList = [];
+        let isUploading = false;
+
+        // Форматирование размера файлов
+        const formatFileSize = (bytes) => {
+            if (bytes === 0) return '0 Б';
+            const k = 1024;
+            const sizes = ['Б', 'КБ', 'МБ', 'ГБ'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+
+        // Защита от случайного закрытия вкладки во время загрузки
+        window.addEventListener('beforeunload', (e) => {
+            if (isUploading) {
+                e.preventDefault();
+                e.returnValue = 'Файл еще загружается! Вы уверены, что хотите выйти?';
+            }
+        });
+
+        // Проверка прав Админа
+        const isAdmin = localStorage.getItem("is_admin") === "true";
+        if (isAdmin) {
+            document.getElementById("admin-panel").style.display = "flex";
+            document.getElementById("user-panel").style.display = "none";
         }
 
-        async function loadFeed() {
-            console.log("Загрузка ленты...");
-        }
-        loadFeed();
+        window.activateAdmin = () => {
+            if (!isAdmin && prompt("Шифр доступа:") === "LMSH2026") {
+                localStorage.setItem("is_admin", "true");
+                location.reload();
+            }
+        };
+
+        // Быстрые кнопки
+        const likeBtn = document.getElementById("channel-like-btn");
+        let currentLikes = parseInt(localStorage.getItem("kosmo_channel_likes")) || 24;
+        let isLiked = localStorage.getItem("kosmo_user_liked") === "true";
+
+        const updateLikeUI = () => {
+            document.getElementById("like-count").innerText = currentLikes;
+            likeBtn.classList.toggle("liked", isLiked);
+        };
+        likeBtn.addEventListener("click", () => {
+            currentLikes += isLiked ? -1 : 1;
+            isLiked = !isLiked;
+            localStorage.setItem("kosmo_channel_likes", currentLikes);
+            localStorage.setItem("kosmo_user_liked", isLiked);
+            updateLikeUI();
+        });
+        updateLikeUI();
+
+        document.getElementById("channel-share-btn").addEventListener("click", () => {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Ссылка скопирована!");
+        });
+
+        document.getElementById("channel-info-btn").addEventListener("click", () => {
+            document.getElementById("channel-url-input").value = window.location.href;
+            document.getElementById("channel-info-modal").style.display = "flex";
+        });
+
+        const fileInput = document.getElementById("file-input");
+        const previewBar = document.getElementById("preview-bar");
+
+        fileInput.addEventListener("change", function() {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                document.getElementById("attached-file-name").innerText = `${file.name} (${formatFileSize(file.size)})`;
+                previewBar.style.display = "flex";
+            }
+        });
+
+        window.clearFile = () => {
+            fileInput.value = "";
+            previewBar.style.display = "none";
+        };
+
+        // Чтение ленты
+        const feed = document.getElementById("feed");
+        onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "asc")), (snapshot) => {
+            feed.innerHTML = "";
+            pinnedPostsList = [];
+            allPostsList = [];
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                const post = { id, ...data };
+                allPostsList.push(post);
+
+                if (data.isPinned) pinnedPostsList.push(post);
+
+                const div = document.createElement("div");
+                div.className = "message";
+                div.id = `msg-${id}`;
+
+                let html = "";
+                if (data.text) html += `<div>${data.text.replace(/\n/g, '<br>')}</div>`;
+
+                // Отображение медиа или документа
+                if (data.fileUrl) {
+                    if (data.fileType && data.fileType.startsWith("image/")) {
+                        html += `<img src="${data.fileUrl}" onclick="openFullscreen('${data.fileUrl}')">`;
+                    } else if (data.fileType && data.fileType.startsWith("video/")) {
+                        html += `<video src="${data.fileUrl}" controls></video>`;
+                    } else {
+                        // Карточка обычного файла (json, zip, pdf и др.)
+                        html += `
+                            <a href="${data.fileUrl}" target="_blank" download="${data.fileName || 'file'}" class="file-card">
+                                <span class="material-symbols-outlined file-icon">description</span>
+                                <div class="file-info">
+                                    <span class="file-name">${data.fileName || 'Документ'}</span>
+                                    <span class="file-size">${formatFileSize(data.fileSize || 0)}</span>
+                                </div>
+                            </a>
+                        `;
+                    }
+                }
+
+                if (data.timestamp) {
+                    const time = data.timestamp.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    html += `<span class="timestamp">${time}</span>`;
+                }
+
+                div.innerHTML = html;
+
+                if (isAdmin) {
+                    div.addEventListener("contextmenu", (e) => {
+                        e.preventDefault();
+                        selectedDocData = { id, isPinned: !!data.isPinned };
+                        const menu = document.getElementById("context-menu");
+                        document.getElementById("pin-text-label").innerText = data.isPinned ? "Открепить" : "Закрепить";
+                        menu.style.top = `${e.clientY}px`;
+                        menu.style.left = `${e.clientX}px`;
+                        menu.style.display = "block";
+                    });
+                }
+
+                feed.appendChild(div);
+            });
+
+            feed.scrollTop = feed.scrollHeight;
+        });
+
+        // Отправка сообщений и загрузка файлов с Прогресс-баром
+        const sendBtn = document.getElementById("send-btn");
+        const progressBox = document.getElementById("upload-progress-box");
+        const progressFill = document.getElementById("upload-progress-fill");
+        const progressPercent = document.getElementById("upload-file-percent");
+        const progressStatus = document.getElementById("upload-file-status");
+
+        sendBtn.addEventListener("click", async () => {
+            const textInput = document.getElementById("post-input");
+            const text = textInput.value.trim();
+            const file = fileInput.files[0];
+
+            if (!text && !file) return;
+
+            sendBtn.disabled = true;
+
+            try {
+                let fileUrl = null;
+                let fileName = null;
+                let fileSize = null;
+                let fileType = null;
+
+                if (file) {
+                    isUploading = true;
+                    progressBox.style.display = "flex";
+
+                    // Создаем ссылку хранения в Storage
+                    const storageRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+
+                    await new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed', 
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                progressFill.style.width = `${progress.toFixed(0)}%`;
+                                progressPercent.innerText = `${progress.toFixed(0)}%`;
+                                progressStatus.innerText = `Загрузка: ${formatFileSize(snapshot.bytesTransferred)} из ${formatFileSize(snapshot.totalBytes)}`;
+                            }, 
+                            (error) => {
+                                alert("Ошибка при загрузке файла: " + error.message);
+                                reject(error);
+                            }, 
+                            async () => {
+                                fileUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                                fileName = file.name;
+                                fileSize = file.size;
+                                fileType = file.type;
+                                resolve();
+                            }
+                        );
+                    });
+                }
+
+                // Запись в Firestore
+                await addDoc(collection(db, "posts"), {
+                    text: text,
+                    fileUrl: fileUrl,
+                    fileName: fileName,
+                    fileSize: fileSize,
+                    fileType: fileType,
+                    isPinned: false,
+                    timestamp: serverTimestamp()
+                });
+
+                textInput.value = "";
+                clearFile();
+            } catch (err) {
+                console.error("Ошибка:", err);
+            } finally {
+                isUploading = false;
+                sendBtn.disabled = false;
+                progressBox.style.display = "none";
+                progressFill.style.width = "0%";
+            }
+        });
+
+        document.addEventListener("click", () => document.getElementById("context-menu").style.display = "none");
+
+        document.getElementById("delete-post-btn").addEventListener("click", async () => {
+            if (selectedDocData && confirm("Удалить сообщение?")) {
+                await deleteDoc(doc(db, "posts", selectedDocData.id));
+            }
+        });
+
+        document.getElementById("pin-post-btn").addEventListener("click", async () => {
+            if (selectedDocData) {
+                await updateDoc(doc(db, "posts", selectedDocData.id), { isPinned: !selectedDocData.isPinned });
+            }
+        });
+
+        window.openFullscreen = (url) => {
+            document.getElementById("fullscreen-content").innerHTML = `<img src="${url}">`;
+            document.getElementById("fullscreen-viewer").style.display = "flex";
+        };
+
+        window.closeFullscreenViewer = () => {
+            document.getElementById("fullscreen-viewer").style.display = "none";
+        };
     </script>
 </body>
 </html>
